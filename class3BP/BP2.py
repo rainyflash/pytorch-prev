@@ -27,7 +27,7 @@ def loss(x,y):#构建计算图
 print('Predict (befortraining)',4,forward(4))
 
 for epoch in range(100):
-    l = loss(1, 2)
+    #l = loss(1, 2)
     for x,y in zip(x_data,y_data):
         l = loss(x, y)
         l.backward()

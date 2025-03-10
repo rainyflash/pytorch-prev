@@ -15,18 +15,18 @@ def loss(x,y):
     return (y_pred-y)*(y_pred-y)
 
 # 记录训练参数
-mse_list = []
 W=np.arange(0.0,4.1,0.1)
 B=np.arange(0.0,4.1,0.1)
 
 # 生成网格采样点
 [w,b]=np.meshgrid(W,B)
+print(w)
 
 # 训练
 l_sum = 0
 for x_val, y_val in zip(x_data, y_data):
-    y_pred_val = forward(x_val)     # 自动计算了整个列表，不用循环
-    print(y_pred_val)
+    #y_pred_val = forward(x_val)     # 自动计算了整个列表，不用循环
+    #print(y_pred_val)
     loss_val = loss(x_val, y_val)
     l_sum += loss_val
 

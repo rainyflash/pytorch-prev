@@ -3,6 +3,7 @@ import torch
 import numpy as np
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
+import matplotlib.pyplot as plt
  
 # 准备数据集
 class DiabetesDataset(Dataset):                         # 抽象类DataSet
@@ -17,17 +18,18 @@ class DiabetesDataset(Dataset):                         # 抽象类DataSet
  
     def __len__(self):
         return self.len
- 
+
+
 # dataset对象
-dataset = DiabetesDataset('../data/diabetes.csv')
+dataset = DiabetesDataset('./data/diabetes.csv')
 
-# 使用DataLoader加载数据
-train_loader = DataLoader(dataset=dataset,  # dataSet对象 
-                            batch_size=32,  # 每个batch的条数
-                            shuffle=True,   # 是否打乱
-                            num_workers=4)  # 多线程一般设置为4和8
- 
+# 使用DataLoader加载数据（移动到main函数内部）
 
+train_loader = DataLoader(dataset=dataset,  # 确保在main函数内初始化
+                        batch_size=32,
+                        shuffle=True)  
+                        #num_workers=4) # 多进程需要放在main中（被我删了）
+                        
 # design model using class
 class Model(torch.nn.Module):
     def __init__(self):
@@ -43,23 +45,38 @@ class Model(torch.nn.Module):
         x = self.sigmoid(self.linear3(x))
         return x
  
- 
+
 model = Model()
- 
+
 # construct loss and optimizer
 criterion = torch.nn.BCELoss(reduction='mean')
 optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
- 
-# training cycle forward, backward, update
-if __name__ == '__main__':
-    for epoch in range(100):
-        for i, data in enumerate(train_loader, 0):  # train_loader 是先shuffle后mini_batch
-            inputs, labels = data                   # 取出一个batch 
-            y_pred = model(inputs)
-            loss = criterion(y_pred, labels)
-            print(epoch, i, loss.item())
 
-            optimizer.zero_grad()
-            loss.backward()
-            # 更新
-            optimizer.step()
+epoch_list = []
+loss_list = []
+# training cycle forward, backward, update
+
+for epoch in range(100):
+    total_loss = 0
+    for i, data in enumerate(train_loader, 0):
+        inputs, labels = data                   # 取出一个batch 
+        y_pred = model(inputs)
+        loss = criterion(y_pred, labels)
+        print(epoch, i, loss.item())
+
+        optimizer.zero_grad()
+        loss.backward()
+        total_loss += loss.item()
+        # 更新
+        optimizer.step()
+        
+    # 修正平均损失计算（使用实际batch数量）
+    avg_loss = total_loss / len(train_loader)  # 替代 dataset.len/32
+    print(f"Epoch {epoch}, Average Loss: {avg_loss}")
+    epoch_list.append(epoch)
+    loss_list.append(avg_loss)
+
+plt.plot(epoch_list, loss_list)
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.show()

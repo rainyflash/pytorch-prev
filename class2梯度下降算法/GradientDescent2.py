@@ -13,6 +13,14 @@ def forward(x):
 def loss(x, y):
     y_pred = forward(x)
     return (y_pred - y)**2
+# 定义损失代价函数
+#define the cost function MSE 
+def cost(xs, ys):
+    cost = 0
+    for x, y in zip(xs,ys):
+        y_pred = forward(x)
+        cost += (y_pred - y)**2
+    return cost / len(xs)
 
 # 定义随机梯度，不是整体的损失
 # define the gradient function  sgd
@@ -28,10 +36,10 @@ for epoch in range(100):
         grad = gradient(x,y)
         w = w - 0.01*grad    # update weight by every grad of sample of training set
         print("\tgrad:", x, y,grad)
-        l = loss(x,y)
-    print("progress:",epoch,"w=",w,"loss=",l)
+        cost_val = cost(x_data, y_data)
+    print("progress:",epoch,"w=",w,"loss=",cost_val)
     epoch_list.append(epoch)
-    loss_list.append(l)
+    loss_list.append(cost_val)
 
 # 绘图
 print('predict (after training)', 4, forward(4))

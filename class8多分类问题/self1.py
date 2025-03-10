@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader
 import torch.nn.functional as F
 # 优化器
 import torch.optim as optim
-import time
+import time  # 添加时间模块
 
 # 准备数据集
 batch_size = 64
@@ -26,19 +26,19 @@ class Net(torch.nn.Module):
     def __init__(self):
         super(Net, self).__init__()
         # 5 层
-        self.l1 = torch.nn.Linear(784, 512)
-        self.l2 = torch.nn.Linear(512, 256)
-        self.l3 = torch.nn.Linear(256, 128)
-        self.l4 = torch.nn.Linear(128, 64)
-        self.l5 = torch.nn.Linear(64, 10)
+        self.l1 = torch.nn.Linear(784, 3042)
+        # self.l2 = torch.nn.Linear(512, 256)
+        # self.l3 = torch.nn.Linear(256, 128)
+        # self.l4 = torch.nn.Linear(128, 64)
+        self.l5 = torch.nn.Linear(3042, 10)
  
     # 前馈
     def forward(self, x):
         x = x.view(-1, 784)     # -1其实就是自动获取mini_batch,使用wiew展开张量为向量
         x = F.relu(self.l1(x))
-        x = F.relu(self.l2(x))
-        x = F.relu(self.l3(x))
-        x = F.relu(self.l4(x))
+        # x = F.relu(self.l2(x))
+        # x = F.relu(self.l3(x))
+        # x = F.relu(self.l4(x))
         return self.l5(x)       # 最后一层不做激活，不进行非线性变换
  
  
@@ -84,9 +84,11 @@ def test():
  
 if __name__ == '__main__':
     start_time = time.time()  # 记录开始时间
+    
     for epoch in range(10):
         train(epoch)
         test()
+    
     end_time = time.time()  # 记录结束时间
     total_time = end_time - start_time
     print(f'Total training time: {total_time:.2f} seconds')  # 打印总耗时

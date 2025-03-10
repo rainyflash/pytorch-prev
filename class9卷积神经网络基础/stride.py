@@ -9,7 +9,7 @@ input = [3,4,6,5,7,
 input = torch.Tensor(input).view(1, 1, 5, 5)
 
 # 定义卷积
-conv_layer = torch.nn.Conv2d(1, 1, kernel_size=3, stride=2, padding=1, bias=False)
+conv_layer = torch.nn.Conv2d(1, 1, kernel_size=3, stride=2, padding=0, bias=False)
 
 # 将一个向量转化为张量赋值给kernel卷积核 
 kernel = torch.Tensor([1,2,3,4,5,6,7,8,9]).view(1, 1, 3, 3)

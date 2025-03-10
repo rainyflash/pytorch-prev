@@ -11,9 +11,9 @@ import matplotlib.pyplot as plt
 batch_size = 64
 transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))])
 
-train_dataset = datasets.MNIST(root='../dataset/mnist/', train=True, download=False, transform=transform)
+train_dataset = datasets.MNIST(root='./data/mnist/', train=True, download=False, transform=transform)
 train_loader = DataLoader(train_dataset, shuffle=True, batch_size=batch_size)
-test_dataset = datasets.MNIST(root='../dataset/mnist/', train=False, download=False, transform=transform)
+test_dataset = datasets.MNIST(root='./data/mnist/', train=False, download=False, transform=transform)
 test_loader = DataLoader(test_dataset, shuffle=False, batch_size=batch_size)
  
 # design model using class
@@ -43,6 +43,7 @@ class Net(torch.nn.Module):
  
 model = Net()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"正在使用 {'CUDA' if torch.cuda.is_available() else 'CPU'} 进行加速训练")
 model.to(device)
  
 # construct loss and optimizer
@@ -89,7 +90,7 @@ if __name__ == '__main__':
     epoch_list = []
     acc_list = []
     
-    for epoch in range(10):
+    for epoch in range(2):
         train(epoch)
         acc = test()
         epoch_list.append(epoch)
